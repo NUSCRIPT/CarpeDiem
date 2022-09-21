@@ -1,0 +1,25 @@
+ipykernel
+umap-learn>=0.5.2
+pandas
+hdbscan
+matplotlib
+seaborn
+scikit-learn
+openpyxl
+statsmodels>=0.13.2
+statannotations>=0.4.4
+jupyterlab
+numpy>=1.20.3
+scipy>=1.7.3
+
+xgboost==1.5.0
+tqdm==4.62.3
+ipython-autotime==0.3.1
+
+# No longer needed
+#torch-1.9.0+cu111-cp39-cp39-linux_x86_64.whl
+#torchvision==0.10.0
+
+#git+https://github.com/el-hult/pyppca
+#ppca
+
