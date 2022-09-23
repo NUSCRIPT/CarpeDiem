@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<style type="text/css">
+body {
+    font-family: "PT Sans", Helvetica, Arial, sans-serif;
+    padding-bottom: 200px;
+    /* padding-left: 10px; */
+    /* padding-right: 10px; */
+    margin: 5px;
+    background: white;
+}
+a {color: #1385cb}
+a:visited {color: #0e74bc}
+.header {
+    margin-left: 300px;
+    font-size: 110%;
+}
+.loader {
+    margin: 50px;
+    text-align: center;
+}
+.loader i {
+    display: inline-block;
+    border: 3px solid #aaa;
+    border-radius: 50%;
+    border-top: 3px solid #1d2e80;
+    width: 40px;
+    height: 40px;
+    animation: 1s linear infinite rotate;
+    will-change: transform;
+}
+@keyframes rotate { from { transform: rotate(0); } to { transform: rotate(360deg); }  }
+.header tt {
+    font-size: 90%;
+    color: #777;
+}
+.first-row, .trajectory {
+    display: flex;
+}
+.trajectory-placeholder {
+    color: #777;
+    text-align: center;
+    margin: 50px auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.trajectory-title {
+    text-align: center;
+}
+.trajectory-title .title {
+    font-size: 20px;
+}
+.trajectory-hint {
+    display: inline-block;
+    margin-left: 50px;
+    font-size: 90%;
+    color: #777;
+}
+.trajectory {
+    height: 150px;
+}
+.patients {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px;
+    margin-top: -10px;
+}
+.patient {
+    border: 1px solid gray;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 2px;
+    cursor: pointer;
+    width: 40px;
+    text-align: center;
+}
+.hidden {
+    display: none;
+}
+.invisible {
+    visibility: hidden;
+}
+.disabled {
+    color: #aaa !important;
+    cursor: default !important;
+}
+.day-info {
+    height: 200px;
+    font-size: 14px;
+    padding-left: 50px;
+    display: flex;
+    flex-flow: column;
+    flex-wrap: wrap;
+}
+.day-info .info-item i {
+    width: 165px;
+    display: inline-block;
+    text-align: right;
+    font-style: normal;
+}
+.patient-legend {
+    width: 500px;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 0 15px 50px;
+}
+.hint {
+    color: #777;
+}
+.legend::before {
+    content: '';
+    width: 100%;
+    order: 1;
+}
+.legend-item {
+    margin-right: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.legend-item:nth-child(5) {
+    order: 1;
+}
+.legend-item:nth-child(n + 5) {
+    order: 2;
+}
+.legend-marker {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+.distributions {
+    padding-left: 10px;
+}
+.distr-title {
+    font-size: 12px;
+    cursor: pointer;
+}
+.distr-title:hover {
+    fill: #555;
+    text-decoration: underline;
+}
+.color-reset, .bal-ctrl, .trends-ctrl {
+    margin-left: 20px;
+    color: darkslateblue;
+    border-bottom: 1px darkslateblue dotted;
+    cursor: pointer;
+}
+.colored-by {
+    font-size: 90%;
+}
+.sofa-scale {
+    height: 10px;
+    position: relative;
+    margin-bottom: 25px;
+}
+.abbr-list {
+    margin: 0 20px;
+}
+</style>
+
+<div class="header"><a href="https://nupulmonary.org/carpediem/"><i>Carpe Diem</i></a> data browser <tt>v1.1</tt></a></div>
+
+<div class="loader"><i></i></div>
+
+<div class="first-row hidden">
+    <div>
+        <div class="umap"></div>
+        <div class="sofa-scale"></div>
+        <div class="hint abbr-list">
+            List of abbreviations:
+            <abbr title="Sequential Organ Failure Assessment">SOFA</abbr>, 
+            <abbr title="Extracorporeal membrane oxygenation">ECMO</abbr>,
+            <abbr title="Continuous Renal Replacement Therapy">CRRT</abbr>,
+            <abbr title="Glascow Coma Scale">GCS</abbr>,
+            <abbr title="Richmond Agitation-Sedation Scale">RASS</abbr>,
+            <abbr title="Mean arterial pressure">MAP</abbr>,
+            <abbr title="Community-acquired pneumonia">CAP</abbr>,
+            <abbr title="Hospital-acquired pneumonia, pneumonia that occurs 48 hours or more after admission and did not appear to be incubating at the time of admission">HAP</abbr>,
+            <abbr title="Ventilator-associated pneumonia, pneumonia that develops more than 48 hours after endotracheal intubation">VAP</abbr>,
+            <abbr title="Bronchoalveolar lavage">BAL</abbr>,
+            <abbr title="Uniform Manifold Approximation and Projection for Dimension Reduction">UMAP</abbr>,
+            <abbr title="Acute inpatient rehabilitation">Rehab</abbr>,
+            <abbr title="Skilled Nursing Facility or Subacute Rehab Care">SNF</abbr>,
+            <abbr title="Long-term Acute Care Hospitals">LTACH</abbr>,
+            <abbr title="Systolic blood pressure">SBP</abbr>,
+            <abbr title="Diastolic blood pressure">DBP</abbr>,
+            <abbr title="Arterial blood gas">ABG</abbr>,
+            <abbr title="White blood cells">WBC</abbr>.
+        </div>
+        <div class="patient-legend hidden">
+            <div>Patient discharge disposition</div>
+            <div class="legend"></div>
+            <div class="hint">click below to select a patient</div>
+        </div>
+    </div>
+    <div style="margin-top: -20px; position: relative;">
+        <div class="trajectory-placeholder">Select a patient below<br/>to view their trajectory</div>
+        <div class="trajectory-title invisible">
+            <span class="title">Patient</span>
+            <span class="trajectory-hint">move mouse over graph to highlight a day</span>
+        </div>
+        <div class="trajectory"></div>
+        <div style="padding-left: 50px; margin-bottom: 5px; color: #777;">click measurement name to color by it
+            <span class="bal-ctrl">show BALs</span>
+            <span class="trends-ctrl disabled">show trends</span>
+            <span class="color-reset invisible">color by cluster</span>
+        </div>
+        <div class="distributions"></div>
+    </div>
+</div>
+
+<div class="patients hidden"></div>
+
+<!-- Load d3.js -->
+<script type="text/javascript" src="d3.v7.min.js"></script>
+<script type="text/javascript" src="pako_inflate.min.js"></script>
+<script type="text/javascript" src="carpe-diem-v2.js"></script>
+<script type="text/javascript">
+    d3.select(window).on("load", function() { d3.buffer("05b_physionet_220923_1409.csv.gz").then(onLoad) });
+</script>
