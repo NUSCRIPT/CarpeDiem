@@ -11,8 +11,8 @@ Notebooks and code for the CarpeDiem project are available in this repository.
 
 Demo data browser: [https://nupulmonary.org/](https://nupulmonary.org/)
 
-Dataset: available at [PhysioNet]()
+Dataset: pending review at [PhysioNet]()
 
-Preprint: [Medrxiv]()
+Preprint: [Medrxiv](https://www.medrxiv.org/content/10.1101/2022.09.23.22280118v1)
 
 If you have any questions, suggestions or collaborations, please feel free to [open an issue](https://github.com/NUSCRIPT/CarpeDiem/issues/new).
